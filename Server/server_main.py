@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app, supports_credentials=True)
 print("Building Server")
 # server = Server('E:/NSM/trained20210124/')
-server = Server('/home/rr/ServerCom/model/fcn/models/')
+server = Server('/home/rr/ServerCom/model/')
 print("Building Finish")
 
 

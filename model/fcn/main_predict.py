@@ -1,19 +1,11 @@
 import os
-from tqdm import tqdm
 import pandas as pd
 import numpy as np
-import sys
-import time
-import joblib
 
 import torch
-from fc import FC
 from net import Model
-from torch import nn
-from torch.nn import init
 from utils.utils import get_norm
 from torch.autograd import Variable
-from sklearn.preprocessing import StandardScaler
 
 
 def predict(net, input, label, seq_flag=False):

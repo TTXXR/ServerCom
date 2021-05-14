@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-from fc import FC
+from model.fcn.fc import FC
 from torch.nn import init
 
 

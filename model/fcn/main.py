@@ -2,22 +2,17 @@ import os
 from tqdm import tqdm
 import pandas as pd
 import numpy as np
-import sys
-import time
 
 import torch
-from fc import FC
 from utils.utils import get_norm
 from net import Model
-from torch import nn
-from torch.nn import init
 from sklearn.preprocessing import StandardScaler
 from torch.autograd import Variable
 
 
 def train(net, inputs_list, num_epochs):
     f = open("data/plots/0.1r_OutScale_bone_gating_256h_fc_record.txt", "w")
-    input_mean, input_std = get_norm("/home/rr/Downloads/nsm_data/utils/inputNorm.txt")
+    input_mean, input_std = get_norm("/home/rr/Downloads/nsm_data/utils/InputNorm.txt")
     output_mean, output_std = get_norm("/home/rr/Downloads/nsm_data/utils/OutputNorm.txt")
     input_mean, input_std = input_mean[0:926], input_std[0:926]
 

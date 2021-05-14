@@ -1,7 +1,6 @@
 import os
 import numpy as np
-from tqdm import tqdm
-from utils import get_norm
+from utils.utils import get_norm
 import pandas as pd
 
 root_path = "/home/rr/Downloads/nsm_data/bone_gating_WalkTrain/"
