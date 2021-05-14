@@ -1,20 +1,15 @@
-from time import time
-import numpy as np
-import os
 import joblib
 
 from flask import *
 from flask_cors import CORS
 
-from model.Server.network_server import Server
-from sklearn.preprocessing import StandardScaler
-
+from Server.network_server import Server
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 print("Building Server")
 # server = Server('E:/NSM/trained20210124/')
-server = Server('/home/rr/nsm_darnn/models/')
+server = Server('/home/rr/ServerCom/model/fcn/models/')
 print("Building Finish")
 
 
@@ -34,20 +29,11 @@ def af_request(resp):
 
 @app.route('/', methods=['POST'])
 def upload():
-    # scale = StandardScaler()
-    scale = joblib.load('/home/rr/nsm_darnn/models/scaler.pkl')
     output = None
     try:
         x = request.json["data"]
         x = x[0:926]
-        print(x)
-
-        # x = np.array(x).reshape(1, -1)
-        # scale = scale.fit(x)
-        # x = scale.transform(x)
-        # x = x[0].tolist()
-        # print(x)
-
+        print("receive:", x)
         output = server.forward(x)
         """
         t_pose_output = [0.0, 1.05086136, -0.05000019, 0.0, 0.101513706, 0.9948341, 0.0, 0.9948341, -0.101513706, 0.0292898063,

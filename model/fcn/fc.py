@@ -19,6 +19,7 @@ class FC(torch.nn.Module):
         self.output_size = output_size
 
         self.fc = nn.Sequential(
+            # FlattenLayer,
             nn.Linear(self.input_size, self.hidden_size),
             nn.ReLU(),
             nn.Linear(self.hidden_size, self.output_size)
