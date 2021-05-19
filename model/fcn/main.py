@@ -11,9 +11,9 @@ from torch.autograd import Variable
 
 
 def train(net, inputs_list, num_epochs):
-    f = open("data/plots/0.1r_OutScale_bone_gating_256h_fc_record.txt", "w")
-    input_mean, input_std = get_norm("/home/rr/Downloads/nsm_data/utils/InputNorm.txt")
-    output_mean, output_std = get_norm("/home/rr/Downloads/nsm_data/utils/OutputNorm.txt")
+    f = open("EA_models/plots/0.1r_256h_fc_record.txt", "w")
+    input_mean, input_std = get_norm("data/InputNorm.txt")
+    output_mean, output_std = get_norm("data/OutputNorm.txt")
     input_mean, input_std = input_mean[0:926], input_std[0:926]
 
     for epoch in range(num_epochs):
@@ -38,9 +38,8 @@ def train(net, inputs_list, num_epochs):
 
                 # 标准化
                 t_input_data = torch.Tensor((np.array(train_input_data).astype('float32') - input_mean) / input_std)
-                t_label_data = torch.Tensor((np.array(train_label_data).astype('float32') - output_mean) / output_std)
-
-                # t_label_data = torch.Tensor(np.array(train_label_data))
+                # t_label_data = torch.Tensor((np.array(train_label_data).astype('float32') - output_mean) / output_std)
+                t_label_data = torch.Tensor(np.array(train_label_data))
 
                 t_input_data = Variable(t_input_data.type(torch.FloatTensor).to(torch.device("cuda:0")))
                 t_label_data = Variable(t_label_data.type(torch.FloatTensor).to(torch.device("cuda:0")))
@@ -69,9 +68,9 @@ def train(net, inputs_list, num_epochs):
         f.write(item)
         f.flush()
 
-        if epoch == 60:
-            torch.save(net.model.state_dict(), os.path.join("models/", "fcn_0.1lr_OutScale_"+str(epoch)+".pth"))
-            torch.save(net.optimizer.state_dict(), os.path.join("models/", "fcn_0.1lr_OutScale_opt_"+str(epoch)+".pth"))
+        if epoch >= 40 and epoch%10 == 0:
+            torch.save(net.model.state_dict(), os.path.join("EA_models/", "fcn_"+str(epoch)+".pth"))
+            torch.save(net.optimizer.state_dict(), os.path.join("EA_models/", "fcn_opt_"+str(epoch)+".pth"))
     f.close()
 
 
@@ -93,7 +92,7 @@ def test(net, input_data, label_data, train_size, loss_func, batch_size):
 if __name__ == '__main__':
     num_inputs, num_outputs, num_hiddens = 926, 618, 256
     learning_rate, batch_size, num_epochs = 0.1, 64, 200
-    root_path = "/home/rr/Downloads/nsm_data/bone_gating_WalkTrain/"
+    root_path = "D:/nsm_data/bone_gating_WalkTrain/"
 
     inputs_list = os.listdir(root_path + "Input/")
     inputs_list.sort(key=lambda x: int(x[:-4]))

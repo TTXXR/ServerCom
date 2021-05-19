@@ -2,6 +2,7 @@ import os
 import numpy as np
 from tqdm import tqdm
 import pandas as pd
+from utils.utils import get_norm
 
 root_path = "/home/rr/Downloads/nsm_data/bone_gating_WalkTrain/"
 
@@ -49,16 +50,6 @@ for i, file in enumerate(tqdm(inputs_list)):
 
         # train_input_data = train_input_data.drop(train_input_data.index, inplace=False)
         # train_label_data = train_label_data.drop(train_label_data.index, inplace=False)
-
-
-def get_norm(file_path):
-    normalize_data = np.float32(np.loadtxt(file_path))
-    mean = normalize_data[0]
-    std = normalize_data[1]
-    for i in range(std.size):
-        if std[i] == 0:
-            std[i] = 1
-    return mean, std
 
 
 input_mean, input_std = get_norm("/home/rr/Downloads/nsm_data/bone_gating_WalkTrain/InputNorm.txt")

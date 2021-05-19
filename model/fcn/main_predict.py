@@ -10,7 +10,7 @@ from torch.autograd import Variable
 
 def predict(net, input, label, seq_flag=False):
     if not seq_flag:
-        return net.model(input), label
+        return net.model(input*2), label
     else:
         out = []
         x = input[0]
@@ -23,7 +23,7 @@ def predict(net, input, label, seq_flag=False):
 
 
 if __name__ == '__main__':
-    root_path = "/home/rr/Downloads/nsm_data/bone_gating_WalkTrain/"
+    root_path = "D:/nsm_data/bone_gating_WalkTrain/"
     loss_func = torch.nn.MSELoss()
     num_inputs, num_outputs, num_hiddens = 926, 618, 256
     batch_size, num_epochs = 64, 40
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     # input_data = torch.Tensor(scale.transform(input_data))
 
     # 手动 标准化
-    input_mean, input_std = get_norm("/home/rr/Downloads/nsm_data/utils/inputNorm.txt")
+    input_mean, input_std = get_norm("data/InputNorm.txt")
     input_mean, input_std = input_mean[0:926], input_std[0:926]
     input_data = torch.Tensor((np.array(input_data).astype('float32') - input_mean) / input_std)
 
@@ -61,6 +61,6 @@ if __name__ == '__main__':
     print(loss)
 
     # sequence test
-    pred, target = predict(net, input_data[-10:], label_data[-10:], True)
-    loss = loss_func(pred, target).sum()
-    print(loss)
+    # pred, target = predict(net, input_data[-10:], label_data[-10:], True)
+    # loss = loss_func(pred, target).sum()
+    # print(loss)
