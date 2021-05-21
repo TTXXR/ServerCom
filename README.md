@@ -1,3 +1,4 @@
 # ServerCom
 
-combined fc model
+darnn -> nsm_darnn
+mlp -> combined fc model
