@@ -13,13 +13,11 @@ def predict(net, input, label, seq_flag=False):
         return net.model(input), label
     else:
         out = []
-        x = input[0]
         for i in range(len(input)):
-            x = net.model(x)
+            x = net.model(input[i])
             out.append(x)
             print(x)
-
-        return out, label
+        return torch.Tensor(out), label
 
 
 if __name__ == '__main__':
@@ -33,9 +31,9 @@ if __name__ == '__main__':
 
     net = Model(num_inputs, num_hiddens, num_outputs, batch_size)
     net.model.load_state_dict(
-        torch.load(os.path.join("models", "fcn_fixedScale_30.pth"), map_location=torch.device("cuda:0")))
+        torch.load("models/fcn_0.1lr_OutScale_60.pth", map_location=torch.device("cuda:0")))
     net.optimizer.load_state_dict(
-        torch.load(os.path.join("models", "fcn_fixedScale_opt_30.pth"), map_location=torch.device("cuda:0")))
+        torch.load("models/fcn_0.1lr_OutScale_opt_60.pth", map_location=torch.device("cuda:0")))
     net.model.eval()
 
     input_data = pd.read_csv(root_path + "Input/" + "1.txt", sep=' ', header=None, dtype=float)
@@ -46,8 +44,10 @@ if __name__ == '__main__':
     # scale = scale.fit(input_data)
     # input_data = torch.Tensor(scale.transform(input_data))
 
-    # 手动 标准化
-    input_mean, input_std = get_norm("/home/rr/Downloads/nsm_data/utils/inputNorm.txt")
+    # 手动标准化
+    input_mean, input_std = get_norm("data/InputNorm.txt")
+    output_mean, output_std = get_norm("data/OutputNorm.txt")
+
     input_mean, input_std = input_mean[0:926], input_std[0:926]
     input_data = torch.Tensor((np.array(input_data).astype('float32') - input_mean) / input_std)
 
@@ -56,11 +56,13 @@ if __name__ == '__main__':
     label_data = Variable(label_data.type(torch.FloatTensor).to(torch.device("cuda:0")))
 
     # single test
-    pred, target = predict(net, input_data[-10:], label_data[-10:])
-    loss = loss_func(pred, target).sum()
-    print(loss)
+    index = -64
+    # pred, target = predict(net, input_data[index:], label_data[index:])
+    # loss = loss_func(pred, target).sum()
+    # print(loss)
 
     # sequence test
-    pred, target = predict(net, input_data[-10:], label_data[-10:], True)
+    pred, target = predict(net, input_data[index:], label_data[index:], seq_flag=True)
+    pred = pred * output_std + output_mean
     loss = loss_func(pred, target).sum()
     print(loss)
