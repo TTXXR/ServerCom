@@ -1,7 +1,6 @@
 import torch
 from torch import nn
 from torch.nn import init
-from ..ExternalAttention.ExternalAttention import ExternalAttention
 
 
 class FlattenLayer(torch.nn.Module):
@@ -19,7 +18,6 @@ class MLP(torch.nn.Module):
         self.hidden_size = hidden_size
         self.output_size = output_size
 
-        self.attn_layer = ExternalAttention(self.input_size)
         self.mlp = nn.Sequential(
             # FlattenLayer,
             nn.Linear(self.input_size, self.hidden_size),
@@ -28,6 +26,5 @@ class MLP(torch.nn.Module):
         )
 
     def forward(self, x):
-        # x = self.attn_layer(x)
         x = self.mlp(x)
         return x

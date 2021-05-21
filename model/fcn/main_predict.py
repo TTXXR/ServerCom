@@ -23,7 +23,8 @@ def predict(net, input, label, seq_flag=False):
 
 
 if __name__ == '__main__':
-    root_path = "D:/nsm_data/bone_gating_WalkTrain/"
+    # root_path = "D:/nsm_data/bone_gating_WalkTrain/"
+    root_path = "/home/rr/Downloads/nsm_data/bone_gating_WalkTrain/"
     loss_func = torch.nn.MSELoss()
     num_inputs, num_outputs, num_hiddens = 926, 618, 256
     batch_size, num_epochs = 64, 40

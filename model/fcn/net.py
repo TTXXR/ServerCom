@@ -1,7 +1,7 @@
 import torch
-from torch import nn
 from model.fcn.MLP import MLP
 from torch.nn import init
+# from ..ExternalAttention.ExternalAttention import ExternalAttention
 
 
 class Model(object):
@@ -14,6 +14,7 @@ class Model(object):
         self.lr = learning_rate
         self.batch_size = batch_size
 
+        # self.attn_layer = ExternalAttention(self.input_size)
         self.model = MLP(self.input_size, self.hidden_size, self.output_size)
         self.optimizer = torch.optim.SGD(self.model.parameters(), lr=self.lr)
         self.loss_func = torch.nn.MSELoss()
@@ -26,4 +27,5 @@ class Model(object):
             print("Using cuda:0.")
 
     def forward(self, x):
+        # x = self.attn_layer(x)
         return self.model(x)

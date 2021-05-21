@@ -8,7 +8,8 @@ from Server.network_server import Server
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 print("Building Server")
-server = Server('D:/nsm_data/bone_gating_WalkTrain/')
+# server = Server('D:/nsm_data/bone_gating_WalkTrain/')
+server = Server("/home/rr/Downloads/nsm_data/bone_gating_WalkTrain/")
 print("Building Finish")
 
 

@@ -11,9 +11,8 @@ from torch.autograd import Variable
 
 
 def train(net, inputs_list, num_epochs):
-    f = open("all_models/plots/back_0.1r_record.txt", "w")
-    input_mean, input_std = get_norm("data/InputNorm.txt")
-    output_mean, output_std = get_norm("data/OutputNorm.txt")
+    f = open("all_models/plots/StandScale.txt", "w")
+    input_mean, input_std = get_norm("data/CalAllInputNorm.txt")
     # input_mean, input_std = input_mean[0:926], input_std[0:926]
 
     for epoch in range(num_epochs):
@@ -33,12 +32,15 @@ def train(net, inputs_list, num_epochs):
                 train_label_data = train_label_data.append(single_label_data, ignore_index=True)
             elif i != 0 and i % files_num == 0:
                 # scale 标准化
-                scale = scale.fit(train_input_data)
-                t_input_data = torch.Tensor(scale.transform(train_input_data))
+                # scale = scale.fit(train_input_data)
+                # t_input_data = torch.Tensor(scale.transform(train_input_data))
 
                 # 标准化
-                # t_input_data = torch.Tensor((np.array(train_input_data).astype('float32') - input_mean) / input_std)
-                # t_label_data = torch.Tensor((np.array(train_label_data).astype('float32') - output_mean) / output_std)
+                # print(train_input_data.iloc[0, :].max())
+                t_input_data = torch.Tensor((np.array(train_input_data) - input_mean) / input_std)
+                # print(t_input_data[0].max())
+
+                # t_input_data = torch.Tensor(np.array(train_input_data))
                 t_label_data = torch.Tensor(np.array(train_label_data))
 
                 t_input_data = Variable(t_input_data.type(torch.FloatTensor).to(torch.device("cuda:0")))
@@ -50,6 +52,7 @@ def train(net, inputs_list, num_epochs):
                     y_hat = net.model(X)
 
                     loss = net.loss_func(y_hat, y).sum()
+                    # print(loss)
                     net.optimizer.zero_grad()
 
                     loss.backward()
@@ -68,7 +71,7 @@ def train(net, inputs_list, num_epochs):
         f.write(item)
         f.flush()
 
-        if epoch == 20 or epoch == 18:
+        if epoch % 4 == 0:
             torch.save(net.model.state_dict(), os.path.join("all_models/", "fcn_"+str(epoch)+".pth"))
             torch.save(net.optimizer.state_dict(), os.path.join("all_models/", "fcn_opt_"+str(epoch)+".pth"))
     f.close()
@@ -94,8 +97,8 @@ if __name__ == '__main__':
     # root_path = "D:/nsm_data/bone_gating_WalkTrain/"
 
     num_inputs, num_outputs, num_hiddens = 5307, 618, 1024
-    learning_rate, batch_size, num_epochs = 0.1, 32, 200
-    root_path = "D:/nsm_data/Train/"
+    learning_rate, batch_size, num_epochs = 0.01, 32, 200
+    root_path = "/home/rr/Downloads/nsm_data/Train/"
 
     inputs_list = os.listdir(root_path + "Input/")
     inputs_list.sort(key=lambda x: int(x[:-4]))
